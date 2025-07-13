@@ -13,6 +13,10 @@ const schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  donatedTillNow: {
+    type: Number,
+    default: 0
+  },
   endDate: {
     type: Date,
     required: true,
@@ -26,6 +30,9 @@ const schema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
+  userName: {
+    type: String
+  }
 });
 
 export const Campaign = mongoose.model("Campaign", schema);

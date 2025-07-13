@@ -12,11 +12,27 @@ export const newCampaign = async (req, res, next) => {
       endDate,
       imageLink,
       user: req.user,
+      userName: req.user.name,
     });
 
     res.status(201).json({
       success: true,
       message: "New Campaign Created!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOneCampaign = async (req, res, next) => {
+  try {
+    const campaignId = req.params.id;
+
+    const campaign = await Campaign.findOne({ _id: campaignId });
+
+    res.status(200).json({
+      success: true,
+      campaign,
     });
   } catch (error) {
     next(error);
@@ -42,8 +58,6 @@ export const getMyCampaign = async (req, res, next) => {
 
 export const getAllCampaign = async (req, res, next) => {
   try {
-    const userid = req.user._id;
-
     const allCampaigns = await Campaign.find().sort({ createdAt: -1 });
     // const allCampaigns = await Campaign.find().populate("user").sort({ createdAt: -1 });
 

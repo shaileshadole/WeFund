@@ -2,7 +2,6 @@ import ErrorHandler from "../middlewares/error.js";
 import { Campaign } from "../models/campaignModel.js";
 import { Donation } from "../models/donationModel.js";
 
-
 //Adding the transaction
 export const donateToCampaign = async (req, res, next) => {
   try {
@@ -12,22 +11,27 @@ export const donateToCampaign = async (req, res, next) => {
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return next(new ErrorHandler("Campaign not found", 404));
 
+    campaign.donatedTillNow += Number(amount);
+    campaign.save();
+
     const donation = await Donation.create({
       campaign: campaignId,
       donor: req.user._id,
+      donorName: req.user.name,
       amount,
+      title: campaign.title,
+      endDate: campaign.endDate,
     });
 
     res.status(201).json({
       success: true,
-      message: "Donation Successful",
+      message: "Donation Sucessfull",
       donation,
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 //Get all the donors of the specific Campaign
 export const getCampaignDonors = async (req, res, next) => {

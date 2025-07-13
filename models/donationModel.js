@@ -12,10 +12,19 @@ const schema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    donorName: {
+      type: String,
+    },
     amount: {
       type: Number,
       required: true,
     },
+    title:{
+      type: String
+    },
+    endDate: {
+      type: Date
+    }
   },
   { timestamps: true }
 );
