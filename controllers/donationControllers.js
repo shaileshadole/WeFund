@@ -1,6 +1,7 @@
 import ErrorHandler from "../middlewares/error.js";
 import { Campaign } from "../models/campaignModel.js";
 import { Donation } from "../models/donationModel.js";
+import { User } from "../models/userModel.js";
 
 //Adding the transaction
 export const donateToCampaign = async (req, res, next) => {
@@ -11,8 +12,14 @@ export const donateToCampaign = async (req, res, next) => {
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return next(new ErrorHandler("Campaign not found", 404));
 
+    if(amount > req.user.balance) return next(new ErrorHandler("Amount is greater that balance"))
+
     campaign.donatedTillNow += Number(amount);
     campaign.save();
+
+    const user = await User.findById(req.user._id);
+    user.balance -= Number(amount);
+    user.save();
 
     const donation = await Donation.create({
       campaign: campaignId,
