@@ -3,10 +3,15 @@ import { User } from "../models/userModel.js"; // adjust path accordingly
 
 // Run at 12:00 AM every day
 cron.schedule("0 0 * * *", async () => {
+  console.log("⏰ Cron job started...");
+
   try {
     const result = await User.updateMany({}, { $inc: { balance: 100 } });
-    console.log("Updated balances for users:", result.modifiedCount);
+    console.log("✅ Updated balances for users:", result.modifiedCount);
   } catch (error) {
-    console.error("Error updating balances:", error);
+    console.error("❌ Error updating balances:", error);
   }
+
+  console.log("⏹️ Cron job finished.");
 });
+
